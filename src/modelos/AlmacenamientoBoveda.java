@@ -2,42 +2,62 @@ package modelos;
 
 import java.io.*;
 import javax.crypto.SecretKey;
-import java.net.URISyntaxException;
 
-public class AlmacenamientoBoveda { 
+public class AlmacenamientoBoveda {
 
     private static final String NOMBRE_ARCHIVO = "boveda.dat";
     private File archivoBoveda;
 
     public AlmacenamientoBoveda() {
+        // Buscar la raíz REAL del proyecto
+        File raizProyecto = encontrarRaizProyecto();
+        archivoBoveda = new File(raizProyecto, NOMBRE_ARCHIVO);
 
-        String rutaProyecto = obtenerRutaProyecto();
-
-        File dirBoveda = new File(rutaProyecto);
-
-        if (!dirBoveda.exists()) {
-            dirBoveda.mkdirs();
+        // Asegurar que el directorio padre exista
+        File directorioPadre = archivoBoveda.getParentFile();
+        if (directorioPadre != null && !directorioPadre.exists()) {
+            if (!directorioPadre.mkdirs()) {
+                System.err.println("Advertencia: No se pudo crear el directorio para la bóveda");
+            }
         }
 
-        archivoBoveda = new File(dirBoveda, NOMBRE_ARCHIVO);
-
-        System.out.println("Archivo de bóveda en raíz del proyecto: " + archivoBoveda.getAbsolutePath());
+        System.out.println("Directorio actual: " + System.getProperty("user.dir"));
+        System.out.println("Raíz del proyecto: " + raizProyecto.getAbsolutePath());
+        System.out.println("✓ Bóveda en raíz: " + archivoBoveda.getAbsolutePath());
     }
 
-    private String obtenerRutaProyecto() {
-        try {
-            File actual = new File(AlmacenamientoBoveda.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .toURI());
+    private File encontrarRaizProyecto() {
+        File directorioActual = new File(System.getProperty("user.dir"));
+        System.out.println("DEBUG: Buscando raíz desde: " + directorioActual.getAbsolutePath());
 
-           
-            return actual.getParentFile().getAbsolutePath();
+        // Subir hasta encontrar marcadores del proyecto
+        File raiz = directorioActual;
+        while (raiz != null) {
+            // Marcadores de que ESTA es la raíz
+            boolean tieneSrc = new File(raiz, "src").exists();
+            boolean tieneIdea = new File(raiz, ".idea").exists();
+            boolean tieneIml = new File(raiz, "ProyectoFinal.iml").exists();
+            boolean tieneGitignore = new File(raiz, ".gitignore").exists();
 
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Error al obtener ruta del proyecto", e);
+            if (tieneSrc || tieneIdea || tieneIml || tieneGitignore) {
+                System.out.println("DEBUG: Marcador encontrado en: " + raiz.getAbsolutePath());
+                return raiz;
+            }
+
+            // Si estamos en una carpeta de clases compiladas (main, modelos, modulos)
+            // también necesitamos subir
+            String nombreActual = raiz.getName();
+            if (nombreActual.equals("main") || nombreActual.equals("modelos") || nombreActual.equals("modulos")) {
+                System.out.println("DEBUG: Estamos en carpeta de clases: " + nombreActual);
+                // Continuar subiendo
+            }
+
+            if (raiz.getParentFile() == null) break;
+            raiz = raiz.getParentFile();
         }
+
+        System.out.println("DEBUG: No se encontró raíz, usando directorio actual");
+        return directorioActual; // Fallback
     }
 
     public boolean existeBoveda() {
@@ -67,6 +87,7 @@ public class AlmacenamientoBoveda {
 
         try (FileOutputStream archivoSalida = new FileOutputStream(archivoBoveda)) {
             archivoSalida.write(datosCifrados);
+            System.out.println("✓ Bóveda guardada en: " + archivoBoveda.getAbsolutePath());
         }
     }
 }
