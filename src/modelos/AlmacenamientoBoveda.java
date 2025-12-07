@@ -28,7 +28,6 @@ public class AlmacenamientoBoveda {
 
     private File encontrarRaizProyecto() {
         File directorioActual = new File(System.getProperty("user.dir"));
-        System.out.println("DEBUG: Buscando raíz desde: " + directorioActual.getAbsolutePath());
 
         // Subir hasta encontrar marcadores del proyecto
         File raiz = directorioActual;
@@ -40,7 +39,6 @@ public class AlmacenamientoBoveda {
             boolean tieneGitignore = new File(raiz, ".gitignore").exists();
 
             if (tieneSrc || tieneIdea || tieneIml || tieneGitignore) {
-                System.out.println("DEBUG: Marcador encontrado en: " + raiz.getAbsolutePath());
                 return raiz;
             }
 
@@ -48,7 +46,6 @@ public class AlmacenamientoBoveda {
             // también necesitamos subir
             String nombreActual = raiz.getName();
             if (nombreActual.equals("main") || nombreActual.equals("modelos") || nombreActual.equals("modulos")) {
-                System.out.println("DEBUG: Estamos en carpeta de clases: " + nombreActual);
                 // Continuar subiendo
             }
 
@@ -56,7 +53,6 @@ public class AlmacenamientoBoveda {
             raiz = raiz.getParentFile();
         }
 
-        System.out.println("DEBUG: No se encontró raíz, usando directorio actual");
         return directorioActual; // Fallback
     }
 
