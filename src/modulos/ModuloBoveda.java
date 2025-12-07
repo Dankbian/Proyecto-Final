@@ -90,10 +90,24 @@ public class ModuloBoveda extends ModuloBase {
                     break;
                     
                 case 4:
-                    System.out.print("Nombre a buscar: ");
-		    String buscar = lector.nextLine();
-		    System.out.println("Valor: " + boveda.obtenerSecreto(buscar));
-                    break;
+                        System.out.print("Ingrese palabra clave para buscar: ");
+                        String buscar = lector.nextLine().toLowerCase();  // Hacemos la búsqueda insensible a mayúsculas/minúsculas
+                        System.out.println("--- Resultados de búsqueda ---");
+                    
+                        // Búsqueda inteligente osea buscar coincidencias parciales
+                        boolean encontrado = false;
+                        for (String nombreSecreto : boveda.listarNombresSecretos()) {
+                            if (nombreSecreto.toLowerCase().contains(buscar)) {  // Compara el nombre del secreto con el término de búsqueda
+                                System.out.println("Secreto encontrado: " + nombreSecreto);
+                                encontrado = true;
+                            }
+                        }
+                        
+                        if (!encontrado) {
+                            System.out.println("No se encontraron secretos con esa palabra clave.");
+                        }
+                        break;
+                    
                 case 5:
                     System.out.print("Nombre a eliminar: ");
 		    String eliminar = lector.nextLine();
