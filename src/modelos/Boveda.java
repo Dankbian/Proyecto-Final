@@ -30,9 +30,17 @@ public class Boveda implements Serializable {
         System.out.println("Secreto '" + nombre + "' agregado.");
     }
 
-    public String obtenerSecreto(String nombre) {
-        return secretos.getOrDefault(nombre, "Error: Secreto no encontrado.");
+public String obtenerSecreto(String busqueda) {
+    for (Map.Entry<String, String> entry : secretos.entrySet()) {
+        String nombre = entry.getKey();
+
+        // Búsqueda flexible (ignora mayúsculas y permite coincidencias parciales)
+        if (nombre.toLowerCase().contains(busqueda.toLowerCase())) {
+            return entry.getValue();
+        }
     }
+    return "Error: Secreto no encontrado.";
+}
 
     public Set<String> listarNombresSecretos() {
         return secretos.keySet();
