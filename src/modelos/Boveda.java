@@ -66,6 +66,19 @@ public String obtenerSecreto(String busqueda) {
         return flujoBytes.toByteArray();
     }
 
+    
+    public boolean actualizarSecreto(String nombreActual, String nuevoNombre, String nuevoValor) {
+        if (!secretos.containsKey(nombreActual)) {
+            return false;
+        }
+    
+        secretos.remove(nombreActual); // eliminamos el viejo
+        secretos.put(nuevoNombre, nuevoValor); // insertamos el nuevo
+        return true;
+    }
+    
+
+
     // Archivo: `src/modelos/Vault.java`
     public static Boveda crearDesdeBytes(byte[] data) throws Exception {
 
