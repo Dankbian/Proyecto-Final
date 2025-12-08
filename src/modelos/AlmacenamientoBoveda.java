@@ -23,7 +23,7 @@ public class AlmacenamientoBoveda {
 
         System.out.println("Directorio actual: " + System.getProperty("user.dir"));
         System.out.println("Raíz del proyecto: " + raizProyecto.getAbsolutePath());
-        System.out.println("✓ Bóveda en raíz: " + archivoBoveda.getAbsolutePath());
+        System.out.println("Bóveda en raíz: " + archivoBoveda.getAbsolutePath());
     }
 
     private File encontrarRaizProyecto() {
