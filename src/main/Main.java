@@ -1,16 +1,14 @@
 package main;
 
+import java.io.*;
+import java.util.Scanner;
+import modelos.AlmacenamientoBoveda;
 import modelos.Bitacora;
 import modelos.Boveda;
 import modelos.VerificarContrasena;
-import modelos.AlmacenamientoBoveda;
-import modulos.ModuloBase;
 import modulos.ModuloArchivos;
+import modulos.ModuloBase;
 import modulos.ModuloBoveda;
-
-import java.io.*;
-import java.io.Console;
-import java.util.Scanner;
 
 public class Main {
 
@@ -153,10 +151,10 @@ public class Main {
         while (bandera) {
             if (console != null) {
                 char[] pass = console.readPassword(mensaje);
-                contrasena = new String(pass);
+                contrasena = new String(pass).trim();
             } else {
                 System.out.print(mensaje);
-                contrasena = lector.nextLine();
+                contrasena = lector.nextLine().trim();
             }
 
             if (validar) {
